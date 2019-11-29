@@ -7,9 +7,22 @@ public class UF3ACT3 {
 	@SuppressWarnings("rawtypes")
 	public static void main (String[] args) {
 
+		// Demanem les dades al usuari
+		Scanner teclado = new Scanner(System.in);
+		System.out.println("url exemple: http://insbaixcamp.org/index.php/2013-10-29-12-24-12/informacio-general-4");
+		
+		System.out.println("Introdueix la url: ");
+		String stringUrl = teclado.nextLine();
+		
+		System.out.println("Introdueix el nombre de camps que vols mostrar: ");
+		int numCamps = teclado.nextInt();
+		teclado.nextLine();
+		
+		System.out.println("Introdueix el patro de busqueda: ");
+		String stringPatro = teclado.nextLine();
 		try {
 			String cadena;
-			URL url = new URL("http://insbaixcamp.org/index.php/2013-10-29-12-24-12/informacio-general-4");
+			URL url = new URL(stringUrl);
 			URLConnection connexio = url.openConnection();
 
 			System.out.println("===============================================================");
@@ -27,15 +40,20 @@ public class UF3ACT3 {
 			Map campsCapçalera = connexio.getHeaderFields();
 			Iterator it = campsCapçalera.entrySet().iterator();
 
+			int num = 1;
 			while (it.hasNext()) {
 				Map.Entry map = (Map.Entry) it.next();
 				System.out.println(map.getKey() + ":" + map.getValue());
+				num++;
+				
 			}
 
 			System.out.println("===============================================================");
-			System.out.println("Camps 1 i 4 de Capçalera");
-			System.out.println("getHeaderField(1)=> " + connexio.getHeaderField(1));
-			System.out.println("getHeaderField(4)=> " + connexio.getHeaderField(4));
+			System.out.println("Camps de Capçalera");
+			// Mostrem les capçaleres
+			for (int i = 1; i <= numCamps && i <= num; i++) {
+				System.out.println("getHeaderField(" + i + ")=> " + connexio.getHeaderField(i));
+			}
 			System.out.println("===============================================================");
 
 			System.out.println("Contingut de [url.getFile()]: " + url.getFile());
@@ -43,7 +61,8 @@ public class UF3ACT3 {
 
 			while ((cadena = pagina.readLine()) != null) {
 
-				if (cadena.contains("script")){
+				// Mostrem nomes les linies que tinguin la paraula que li indiquem
+				if (cadena.contains(stringPatro)){
 					System.out.println(cadena);
 				}
 			}
@@ -51,6 +70,4 @@ public class UF3ACT3 {
 		catch (MalformedURLException e) { e.printStackTrace();}
 		catch (IOException e) {e.printStackTrace();}
 	}
-
-
 }
